@@ -27,7 +27,7 @@ The jar to deploy is `build/libs/sample-catalog-code-project-java-1.0.0.jar`.
 
 `libs/` holds the ByteChef SDK jars the code compiles against: `project-api-1.0.jar` and `workflow-api-1.0.jar`. They
 are `compileOnly` - the server provides them at runtime, so they must not be packed into your jar. To refresh them, run
-`./gradlew :sdks:backend:java:workflow-api:jar :sdks:backend:automation:project-api:jar` in the ByteChef repository
+`./gradlew :sdks:backend:java:workflow-api:jar :sdks:backend:java:automation:project-api:jar` in the ByteChef repository
 and copy the jars from each module's `build/libs/`.
 
 ## Deploy

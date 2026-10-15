@@ -10,10 +10,36 @@ parses - imported under Embedded → **Automations** (the Automation Workflows p
 Importing publishes it to the embedded catalog straight away. A catalog workflow is only invocable through the embedded
 public endpoints when it declares a **request** trigger or an **app-event** (`appEvent/newEvent`) trigger; a workflow
 without one still imports, but the import returns a warning for it (the UI keeps the dialog open and shows the
-warning). This sample declares `request/v1/autoRespondWithHTTP200`.
+warning).
 
-The project, "Sample Catalog Code Project Java", has one workflow, `greetOnRequest`, started by the request trigger. It
-runs one task, `greet`, that returns a greeting, and exposes that as the `greeting` output.
+The project, "Sample Catalog Code Project Java", has three workflows, one class each under
+`org.sample.codeworkflow.workflow`:
+
+- `greetOnRequest` (`GreetOnRequestWorkflow`), started by a `request/v1/autoRespondWithHTTP200` trigger. It runs one
+  task, `greet`, that logs and returns a greeting, and exposes that as the `greeting` output.
+- `summarizeNewEmail` (`SummarizeNewEmailWorkflow`), started by the Gmail **New Email** polling trigger
+  (`googleMail/v1/newEmailPolling`). It runs once for every new email in the connected user's inbox and returns a
+  one-line summary as the `summary` output. It declares no request or app-event trigger, so the import warns about it;
+  it needs no call - once provisioned and enabled it runs whenever an email arrives.
+- `fetchRecentEmails` (`FetchRecentEmailsWorkflow`), started by a `request/v1/awaitWorkflowAndRespond` trigger. Its
+  `fetchEmails` task calls the Gmail **Search Email** action and returns the matching messages as the `emails` output.
+  The optional request body `{"from": "...", "maxResults": 5}` narrows the search.
+
+### Connections
+
+A task names the connections it uses and calls a component action through one of them:
+
+```java
+task("fetchEmails")
+    .connections(connection("googleMail", "gmail"))
+    .perform(context -> context.component("googleMail", "searchEmail", Map.of("maxResults", 10), "gmail"));
+```
+
+When a connected user provisions a reference to a workflow, ByteChef binds every declared connection, and every
+component trigger, to one of that user's connections on the same component - for example the one they created when
+they connected a Gmail integration. Pass `{"connections": {"googleMail": <connectionId>}}` in the provision body to pick
+one. A user with no Gmail connection gets the reference created disabled and a `409` naming the missing component
+(`missingConnectionComponentName`).
 
 ## Build
 

@@ -24,8 +24,9 @@ public class FetchRecentEmailsWorkflow {
         .tasks(
             task("fetchEmails")
                 .label("Fetch Emails")
-                // A task names the connections it uses. Provisioning binds each one to a connection of the connected
-                // user on the same component.
+                // A code task's perform calls actions itself, so it declares the connections it uses; the name is what
+                // perform passes to the action. Provisioning binds each one to a connection of the connected user on
+                // the same component.
                 .connections(connection("googleMail", "gmail"))
                 .perform(FetchRecentEmailsWorkflow::fetchEmails));
 

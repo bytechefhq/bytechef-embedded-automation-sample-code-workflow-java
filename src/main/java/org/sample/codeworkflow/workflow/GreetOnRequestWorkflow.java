@@ -9,8 +9,7 @@ import com.bytechef.workflow.definition.TaskContext;
 import com.bytechef.workflow.definition.WorkflowDsl.ModifiableWorkflowDefinition;
 
 /**
- * A catalog workflow is only reachable through the embedded public endpoints when it declares a request trigger or an
- * app-event trigger. Without one the import still succeeds, but returns a warning for the workflow.
+ * A request trigger makes the workflow callable through the embedded public endpoints.
  */
 public class GreetOnRequestWorkflow {
 

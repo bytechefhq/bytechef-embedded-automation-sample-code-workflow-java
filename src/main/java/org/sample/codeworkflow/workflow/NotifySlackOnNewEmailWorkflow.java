@@ -1,0 +1,57 @@
+package org.sample.codeworkflow.workflow;
+
+import static com.bytechef.workflow.definition.WorkflowDsl.connection;
+import static com.bytechef.workflow.definition.WorkflowDsl.input;
+import static com.bytechef.workflow.definition.WorkflowDsl.output;
+import static com.bytechef.workflow.definition.WorkflowDsl.task;
+import static com.bytechef.workflow.definition.WorkflowDsl.trigger;
+import static com.bytechef.workflow.definition.WorkflowDsl.workflow;
+
+import com.bytechef.workflow.definition.TaskContext;
+import com.bytechef.workflow.definition.WorkflowDsl.ModifiableWorkflowDefinition;
+import java.util.Map;
+
+/**
+ * The Gmail trigger needs no declaration, but the task calls Slack itself, so it declares that connection and passes
+ * the name. Provisioning binds it to one of the connected user's Slack connections.
+ */
+public class NotifySlackOnNewEmailWorkflow {
+
+    public static final ModifiableWorkflowDefinition WORKFLOW_DEFINITION = workflow("notifySlackOnNewEmail")
+        .label("Notify Slack on New Email")
+        .description("Posts every new email in the connected user's inbox to a Slack channel.")
+        .inputs(
+            input("channel")
+                .label("Slack Channel ID")
+                .type("STRING")
+                .required(true))
+        .triggers(
+            trigger("newEmail", "googleMail/v1/newEmailPolling")
+                .parameters(Map.of("format", "SIMPLE")))
+        .outputs(
+            output("message")
+                .task("postToSlack"))
+        .tasks(
+            task("postToSlack")
+                .label("Post to Slack")
+                .description("Posts the sender and subject with the Slack Send Channel Message action.")
+                .connections(connection("slack", "slack"))
+                .perform(NotifySlackOnNewEmailWorkflow::postToSlack));
+
+    private static Object postToSlack(TaskContext context) throws Exception {
+        Map<?, ?> email = asMap(context.input("newEmail"));
+
+        String text = "New email from " + email.get("from") + ": " + email.get("subject");
+
+        Object message = context.component(
+            "slack", "sendChannelMessage", Map.of("channel", context.input("channel"), "text", text), "slack");
+
+        context.log(TaskContext.LogLevel.INFO, "Posted to Slack: " + text);
+
+        return message;
+    }
+
+    private static Map<?, ?> asMap(Object value) {
+        return value instanceof Map<?, ?> map ? map : Map.of();
+    }
+}

@@ -12,7 +12,7 @@ endpoints by its **request** or **app-event** (`appEvent/newEvent`) trigger, or 
 trigger such as Gmail **New Email** starts it. A workflow with no trigger that can start it - none, or only a manual
 one - still imports, but the import returns a warning for it (the UI keeps the dialog open and shows the warning).
 
-The project, "Sample Catalog Code Project Java", has three workflows, one class each under
+The project, "Sample Catalog Code Project Java", has four workflows, one class each under
 `org.sample.codeworkflow.workflow`:
 
 - `greetOnRequest` (`GreetOnRequestWorkflow`), started by a `request/v1/autoRespondWithHTTP200` trigger. It runs one
@@ -24,6 +24,10 @@ The project, "Sample Catalog Code Project Java", has three workflows, one class 
 - `fetchRecentEmails` (`FetchRecentEmailsWorkflow`), started by a `request/v1/awaitWorkflowAndRespond` trigger. Its
   `fetchEmails` task calls the Gmail **Search Email** action and returns the matching messages as the `emails` output.
   The optional request body `{"from": "...", "maxResults": 5}` narrows the search.
+- `notifySlackOnNewEmail` (`NotifySlackOnNewEmailWorkflow`), started by the Gmail **New Email** trigger, with a required
+  `channel` input, the ID of a Slack channel. Its `postToSlack` task calls the Slack **Send Channel Message** action, so
+  it declares a `slack` connection and passes its name. Provisioning binds it to one of the connected user's Slack
+  connections; a user with none gets the reference created disabled and a `409` naming `slack`.
 
 ### Connections
 

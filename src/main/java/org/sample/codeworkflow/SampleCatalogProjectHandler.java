@@ -6,6 +6,7 @@ import com.bytechef.automation.project.ProjectHandler;
 import com.bytechef.automation.project.definition.ProjectDefinition;
 import com.google.auto.service.AutoService;
 import org.sample.codeworkflow.workflow.FetchRecentEmailsWorkflow;
+import org.sample.codeworkflow.workflow.NotifySlackOnNewEmailWorkflow;
 import org.sample.codeworkflow.workflow.GreetOnRequestWorkflow;
 import org.sample.codeworkflow.workflow.SummarizeNewEmailWorkflow;
 
@@ -21,7 +22,7 @@ public class SampleCatalogProjectHandler implements ProjectHandler {
         .version("1")
         .workflows(
             GreetOnRequestWorkflow.WORKFLOW_DEFINITION, SummarizeNewEmailWorkflow.WORKFLOW_DEFINITION,
-            FetchRecentEmailsWorkflow.WORKFLOW_DEFINITION);
+            FetchRecentEmailsWorkflow.WORKFLOW_DEFINITION, NotifySlackOnNewEmailWorkflow.WORKFLOW_DEFINITION);
 
     @Override
     public ProjectDefinition getDefinition() {

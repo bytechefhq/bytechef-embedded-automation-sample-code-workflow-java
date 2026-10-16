@@ -25,9 +25,11 @@ The project, "Sample Catalog Code Project Java", has four workflows, one class e
   `fetchEmails` task calls the Gmail **Search Email** action and returns the matching messages as the `emails` output.
   The optional request body `{"from": "...", "maxResults": 5}` narrows the search.
 - `notifySlackOnNewEmail` (`NotifySlackOnNewEmailWorkflow`), started by the Gmail **New Email** trigger, with a required
-  `channel` input, the ID of a Slack channel. Its `postToSlack` task calls the Slack **Send Channel Message** action, so
-  it declares a `slack` connection and passes its name. Provisioning binds it to one of the connected user's Slack
-  connections; a user with none gets the reference created disabled and a `409` naming `slack`.
+  `channel` input; its options come from Slack's own `channel` input (`componentName`, `componentVersion` and
+  `groupName` on the input), so it is picked from the Slack workspace's channels. Its `postToSlack` task calls the Slack
+  **Send Channel Message** action, so it declares a `slack` connection and passes its name. Provisioning binds it to one
+  of the connected user's Slack connections; a user with none gets the reference created disabled and a `409` naming
+  `slack`.
 
 ### Connections
 

@@ -10,10 +10,6 @@ import org.sample.codeworkflow.workflow.NotifySlackOnNewEmailWorkflow;
 import org.sample.codeworkflow.workflow.GreetOnRequestWorkflow;
 import org.sample.codeworkflow.workflow.SummarizeNewEmailWorkflow;
 
-/**
- * An embedded catalog project is an ordinary automation code project - the same ProjectHandler - imported under
- * Embedded &rarr; Automation Workflows instead of Automation &rarr; Projects.
- */
 @AutoService(ProjectHandler.class)
 public class SampleCatalogProjectHandler implements ProjectHandler {
 

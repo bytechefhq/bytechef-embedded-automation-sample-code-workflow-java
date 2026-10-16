@@ -9,10 +9,6 @@ import com.bytechef.workflow.definition.TaskContext;
 import com.bytechef.workflow.definition.WorkflowDsl.ModifiableWorkflowDefinition;
 import java.util.Map;
 
-/**
- * Provisioning binds the trigger to one of the connected user's Gmail connections - for example the one they created
- * when they connected a Gmail integration.
- */
 public class SummarizeNewEmailWorkflow {
 
     public static final ModifiableWorkflowDefinition WORKFLOW_DEFINITION = workflow("summarizeNewEmail")

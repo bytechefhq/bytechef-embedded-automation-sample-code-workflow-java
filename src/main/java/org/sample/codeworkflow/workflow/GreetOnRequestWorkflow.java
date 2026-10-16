@@ -8,9 +8,6 @@ import static com.bytechef.workflow.definition.WorkflowDsl.workflow;
 import com.bytechef.workflow.definition.TaskContext;
 import com.bytechef.workflow.definition.WorkflowDsl.ModifiableWorkflowDefinition;
 
-/**
- * A request trigger makes the workflow callable through the embedded public endpoints.
- */
 public class GreetOnRequestWorkflow {
 
     public static final ModifiableWorkflowDefinition WORKFLOW_DEFINITION = workflow("greetOnRequest")

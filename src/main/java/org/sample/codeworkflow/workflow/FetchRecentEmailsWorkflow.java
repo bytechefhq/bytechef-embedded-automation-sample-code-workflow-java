@@ -27,9 +27,8 @@ public class FetchRecentEmailsWorkflow {
                 .connections(connection("googleMail", "gmail"))
                 .perform(FetchRecentEmailsWorkflow::fetchEmails));
 
-    private static Object fetchEmails(TaskContext context) throws Exception {
-        Map<?, ?> request = asMap(context.input()
-            .get("request"));
+    private static Object fetchEmails(Map<String, ?> input, TaskContext context) throws Exception {
+        Map<?, ?> request = asMap(input.get("request"));
         Map<?, ?> body = asMap(request.get("body"));
 
         Map<String, Object> searchInput = new HashMap<>();

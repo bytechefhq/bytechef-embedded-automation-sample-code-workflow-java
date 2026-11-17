@@ -7,6 +7,7 @@ import static com.bytechef.workflow.definition.WorkflowDsl.workflow;
 
 import com.bytechef.workflow.definition.TaskContext;
 import com.bytechef.workflow.definition.WorkflowDsl.ModifiableWorkflowDefinition;
+import java.util.Map;
 
 public class GreetOnRequestWorkflow {
 
@@ -22,7 +23,7 @@ public class GreetOnRequestWorkflow {
                 .label("Greet")
                 .perform(GreetOnRequestWorkflow::greet));
 
-    private static Object greet(TaskContext context) {
+    private static Object greet(Map<String, ?> input, TaskContext context) {
         context.log(TaskContext.LogLevel.INFO, "Greeting from the embedded catalog");
 
         return "Hello from the embedded catalog";

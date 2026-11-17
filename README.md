@@ -38,7 +38,7 @@ A task names the connections it uses and calls a component action through one of
 ```java
 task("fetchEmails")
     .connections(connection("googleMail", "gmail"))
-    .perform(context -> context.component("googleMail", "searchEmail", Map.of("maxResults", 10), "gmail"));
+    .perform((input, context) -> context.component("googleMail", "searchEmail", Map.of("maxResults", 10), "gmail"));
 ```
 
 When a connected user provisions a reference to a workflow, ByteChef binds every declared connection, and every

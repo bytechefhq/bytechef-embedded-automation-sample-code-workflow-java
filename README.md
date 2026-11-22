@@ -12,7 +12,7 @@ endpoints by its **request** or **app-event** (`appEvent/newEvent`) trigger, or 
 trigger such as Gmail **New Email** starts it. A workflow with no trigger that can start it - none, or only a manual
 one - still imports, but the import returns a warning for it (the UI keeps the dialog open and shows the warning).
 
-The project, "Sample Catalog Code Project Java", has four workflows, one class each under
+The project, "Sample Catalog Code Project Java", has five workflows, one class each under
 `org.sample.codeworkflow.workflow`:
 
 - `greetOnRequest` (`GreetOnRequestWorkflow`), started by a `request/v1/autoRespondWithHTTP200` trigger. It runs one
@@ -30,6 +30,26 @@ The project, "Sample Catalog Code Project Java", has four workflows, one class e
   **Send Channel Message** action, so it declares a `slack` connection and passes its name. Provisioning binds it to one
   of the connected user's Slack connections; a user with none gets the reference created disabled and a `409` naming
   `slack`.
+- `logNewEmailSender` (`LogNewEmailSenderWorkflow`), started by the Gmail **New Email** trigger. Its `describe` task picks the sender and
+  subject out of the new email, and its `logSender` task is a component task that runs the Logger **Info** action with
+  them, so the execution log shows one line per email.
+
+### Component tasks
+
+A task that only runs a component action, with no logic of its own, can name the action by type instead of declaring
+`perform`, with `componentTask(name, type)`, the same way a trigger names its component:
+
+```java
+componentTask("logSender", "logger/v1/info")
+    .parameters(Map.of("text", "New email from ${describe.sender}: ${describe.subject}"))
+```
+
+The type is `<component>/v<version>/<action>`, and `parameters` holds the action's inputs. A `${...}` expression is
+evaluated when the task runs: `"${describe}"` is the whole output of the `describe` task, `"${describe.sender}"` one of
+its fields, and text such as `"New email from ${describe.sender}: ${describe.subject}"` becomes a string with the
+values filled in. A component task declares no connections: when its action needs one, it is bound like the
+same task's in a visual workflow. Importing the deployed project fails when the component, its version or the action does not exist
+on the server. `componentTask` needs a `workflow-api-1.0.jar` built from a ByteChef version that has component tasks.
 
 ### Connections
 
